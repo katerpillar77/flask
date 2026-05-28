@@ -1,11 +1,11 @@
-from flask import  render_template, redirect, request
+from flask import  render_template, redirect, request, flash
 from helpers import apology, sanitise_colour_input
 from app import app
 from db_functions import *
 
 @app.route('/')
 def index():
-    paints =get_all_paints();
+    paints =get_all_paints()
     return render_template('index.html', paints=paints)
 
 @app.route('/add', methods=["GET", "POST"])
@@ -22,23 +22,24 @@ def add():
         hex=request.form.get("hex")
 
         if not name:
-            return apology("must provide paint name", 400)
-            #TODO handle this more gracefully
+            flash('Colour name is missing')
+            return render_template("add.html")
+            #TODO handle this with JS to avoid reloading page
 
         #test data
         #returns RGB dictionary or False
         colour = sanitise_colour_input(r,g,b,hex)
         if not colour:
-            return apology("must provide paint colour", 400)
-            #TODO handle this more gracefully
+            flash('Colour is missing or invalid')
+            return render_template("add.html")
+            #TODO handle this with JS to avoid reloading page
 
         #add to database
         if not add_colour("", name, colour):
-            return apology("could not add colour to database", 400)
-            #TODO handle this more gracefully
+            flash('Could not add colour to database')
+            return render_template("add.html")
+            #TODO handle this with JS to avoid reloading page
 
-        #TODO confirm colour has been added
-        #refresh page
         return render_template("add.html")
 
     # User reached route via GET (as by clicking a link or via redirect)

@@ -17,6 +17,8 @@ class Colour(db.Model):
     S: so.Mapped[str] = so.mapped_column(sa.Integer)
     L: so.Mapped[str] = so.mapped_column(sa.Integer)
     paints=so.relationship('Paint', back_populates='colour')
+    def __repr__(self):
+        return '<Colour {}>'.format(self.id)
 
 class Paint(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
